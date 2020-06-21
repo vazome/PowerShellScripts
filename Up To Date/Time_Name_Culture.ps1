@@ -20,8 +20,9 @@ Read-Host "Press Enter"
 If ($DefaultSystemLanguage -eq "en-US") {
     Write-Host "We will set your locale and language settings to main US"
     $culture = Get-Culture
-    $culture.DateTimeFormat.ShortDatePattern = 'dd/MM/yyyy'
-    $culture.DateTimeFormat.LongDatePattern = 'dddd, d MMMM yyyy'
+    $culture.DateTimeFormat.FullDateTimePattern =' d MMMM yyyy HH:mm:ss'
+    $culture.DateTimeFormat.ShortDatePattern = 'dd.MM.yyyy'
+    $culture.DateTimeFormat.LongDatePattern = 'd MMMM yyyy'
     $culture.DateTimeFormat.ShortTimePattern = 'HH:mm'
     $culture.DateTimeFormat.LongTimePattern = 'HH:mm:ss'
     $culture.DateTimeFormat.FirstDayOfWeek = 'Monday'
