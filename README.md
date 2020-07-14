@@ -18,7 +18,7 @@ Add popular Windows 10 tweaks
 Select applications to download and install
 ... and so on
 ## Search tools
-### [FindConvertExportLog](/UpToDate/Text%20Sort/FindAndSplitUnique.ps1)
+### [FindConvertExportLog](/Up%20To%20Date/Text%20Sort/Find-X%20Do-X%201.1.ps1)
 to be updated
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
