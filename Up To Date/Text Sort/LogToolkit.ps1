@@ -1,44 +1,56 @@
 #2020
 #Declaring fucntion to add round bracket
+#^(?=.*\b08334451\b)(?=.*\bOmni\b).*$ - Find a string with these 2 keywords
 using namespace System.Management.Automation.Host
+Add-Type -AssemblyName System.Windows.Forms
+function Show-Dialog {
+    $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog
+    $FileBrowser.InitialDirectory = [System.IO.Directory]::GetCurrentDirectory()
+    $FileBrowser.Filter = 'All files (*.*)| *.*'
+    $FileBrowser.Title = 'Select file to process'
+    $importresult = $FileBrowser.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true }))
+    $importresult
+    if ($importresult -eq "OK"){      
+        $script:tocount = [System.IO.File]::ReadLines($FileBrowser.FileName)
+
+    }
+    else {
+        Write-Warning "No file proveded"
+    }
+}
+
 function Get-Values {
     #Let's ask for current search scope
-    Write-Host "Please specify file(s) location.`nFor a single file just insert the file path`nIf you want to scan multiple files:`n1. Please create a separate folder and put files there`n2. Use wildcard symbol in the end (this will affect all folder contents, be aware) - C:\MyFolder\*" -ForegroundColor Black -BackgroundColor DarkYellow
-    $FileOrFolderName = Read-Host -Prompt 'Specify the file/folder'
-    $SpecifyRecord = (Read-Host -Prompt 'What record are you looking for (if multiple separate them by ", ")').split(',') | ForEach-Object { $_.trim() }
+    Write-Host "Please specify file(s) location" -ForegroundColor Black -BackgroundColor DarkYellow
+    Show-Dialog
+    $SpecifyMethodRecord = (Read-Host -Prompt "Would you like to specify method name or log type name? Press Enter if No").Split(',') | ForEach-Object { $_.trim() }
+    $SpecifyRecord = (Read-Host -Prompt 'What record are you looking for (if multiple separate them by comma)').split(',') | ForEach-Object { $_.trim() }
     $Delimiter_1 = Read-Host -Prompt 'Please provide structural delimiter for example comma "," or colon ":"'
     $Delimiter_2 = Read-Host -Prompt 'And second structural delimiter for example comma "," or colon ":"'
-    Write-Host 'Here is your input:' -ForegroundColor Black -BackgroundColor DarkYellow
-    $FileOrFolderName = $FileOrFolderName -replace '^"(.*)"$', '$1'
-    $FileOrFolderName
-    $SpecifyRecord
-    $Delimiter_1
-    $Delimiter_2
     Start-Sleep -Seconds 1
     #We have to obtain file(s) content, just in case remove "", delimit the content and select by pattern
     $tempfile = New-TemporaryFile
     $tempfile.FullName
-    Write-Host 'Step 1: Delimiting, scoping'
-    $tocount = [System.IO.File]::ReadLines($FileOrFolderName)
+    Write-Host 'Step 1: Creating the scope'
+    if (-not ([string]::IsNullOrEmpty($SpecifyMethodRecord))) {
+        $methodmatch = $tocount | Select-String $SpecifyMethodRecord
+        $methodmatch | Set-Content $tempfile.FullName -Encoding UTF8
+        $tocount = [System.IO.File]::ReadLines($tempfile.FullName)
+    }
     $delimatch = foreach ($s in $tocount) {
-        $s -split $Delimiter_1 -match $SpecifyRecord
+        $s -split $Delimiter_1 -match $SpecifyRecord -split $Delimiter_2 -notmatch $SpecifyRecord -replace '[^A-Za-z0-9-]'
     }
-    [System.IO.File]::WriteAllLines($tempfile.FullName, $delimatch)
-    Write-Host 'Step 2: Delimiting, sorting unique, matching'
-    #Delimiting
-    $getfinalcount = [System.IO.File]::ReadLines($tempfile.FullName)
-    $delimreplregx = foreach ($i in $getfinalcount) {
-        $i -split $Delimiter_2 -replace '[^A-Za-z0-9]' -notmatch $SpecifyRecord
-    }
-    [System.IO.File]::WriteAllLines($pathfinalcountwhole, $delimreplregx)
+    Set-Content $pathfinalcountwhole -Value ($delimatch) -Encoding UTF8
+    Write-Host 'Step 2: Delimiting and matching'
     Remove-Item $tempfile.FullName -Force
     Do {
-        $yesorno = Read-Host -Prompt "Remove duplicates and create an additional file? (y/n)"
+        $yesorno = Read-Host -Prompt "Remove duplicates and create an additional file (y/n)?"
         if ($yesorno -like 'y*') {
+            Write-Host 'Step 2.1: Removing duplicates (unifying)'
             #Removing duplicates
             $Lines = [System.Collections.Generic.HashSet[string]]::new()
             $Lines.UnionWith([string[]][System.IO.File]::ReadLines($pathfinalcountwhole))
-            [System.IO.File]::WriteAllLines($pathfinalcountnoduplicates, $Lines)
+            $Lines | Set-Content $pathfinalcountnoduplicates -Encoding UTF8
         }
         Convert-SQL
         return
@@ -51,15 +63,15 @@ function AddTheContent {
     param ( 
         [String]$pathsqlfinalcontent)
     process {
-        $( , $_; Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent
+        $( , $_; Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent -Encoding UTF8
     }
 }
-#Declaring fucntion to make it SQL like
+#Declaring fucntion that converts to SQL
 function Convert-SQL () {
     Write-Host 'Step 3: Converting to SQL'
     Do {
-        if (!$specifolder) {
-            $yesorno = Read-Host -Prompt "Would you like convert this to SQL query format (y/n)"
+        if ([string]::IsNullOrEmpty($specifolder)) {
+            $yesorno = Read-Host -Prompt "Would you like convert this to SQL query format (y/n)?"
         }
         if ($yesorno -like 'y*') {
             Write-Host 'Provided with "Yes"'"`nConverted`nThe path is - \Documents\SQLFindAndSplitOutput.txt" -ForegroundColor Black -BackgroundColor DarkYellow
@@ -71,22 +83,23 @@ function Convert-SQL () {
             $tempfile2 = New-TemporaryFile
             $tempfile2.FullName
             $outputstring = $append.ToString()
-            $outputstring | Set-Content $tempfile2.FullName
+            $outputstring | Set-Content $tempfile2.FullName -Encoding UTF8
             Write-Host 'Step 4: Trimming'
             $removelast = Get-Content $tempfile2.FullName
             for ($i = $removelast.count; $i -ge 0; $i--) {
                 if ($removelast[$i] -match ",") { $removelast[$i] = $removelast[$i] -replace ","; break }
             }
-            $removelast | Set-Content $pathsqlfinalcontent
+            $removelast | Set-Content $pathsqlfinalcontent -Encoding UTF8
             Write-Host 'Step 5: brackets'
             #An another way to add "("
             #"(" | AddTheContent $pathsqlfinalcontent
             $plusbracket = "(" + (Get-Content $pathsqlfinalcontent -Raw)
-            [System.IO.File]::WriteAllLines($pathsqlfinalcontent, $plusbracket.Split('', [System.StringSplitOptions]::RemoveEmptyEntries))
+            $plusbracket.Split('', [System.StringSplitOptions]::RemoveEmptyEntries) | Set-Content $pathsqlfinalcontent -Encoding UTF8
             Add-Content $pathsqlfinalcontent -Value ")" 
             Remove-Item $tempfile2.FullName -Force
             return
         }
+
     }
     Until ($yesorno -like 'n*')
     Write-Host 'Provided with "No"' -ForegroundColor Black -BackgroundColor DarkYellow
@@ -103,14 +116,14 @@ function Compare-Files {
             $_
         }) > $temp3.FullName
     $compared = Get-Content $temp3.FullName
-    Add-Type -AssemblyName System.Windows.Forms
+    
     $dialog = New-Object System.Windows.Forms.SaveFileDialog
     $dialog.filter = "Text Files (*.txt)|*.txt|CSV Files (*.csv)|*.csv"
     $dialog.InitialDirectory = "$HOME\Documents"
     $result = $dialog.ShowDialog()    
     $result 
     if($result -eq 'OK') { 
-        $compared | Out-File -FilePath $dialog.FileName
+        $compared | Set-Content $dialog.FileName -Encoding UTF8
     }
     else { Write-Host "File Save Dialog Cancelled!" -ForegroundColor Yellow} 
     Remove-Item $temp3.FullName -Force
@@ -152,11 +165,10 @@ function Show-Menu {
         }
     }
 }
-$stopwatch = [System.Diagnostics.Stopwatch]::StartNew()
-$pathfinalcountwhole = "$HOME\Documents\All-X-Values.txt"
-$pathfinalcountnoduplicates = "$HOME\Documents\NoDuplicates-X-Values.txt"
-$pathsqlfinalcontent = "$HOME\Documents\SQL-X-Formated.txt"
+Measure-Command -Expression {
+$script:pathfinalcountwhole = "$HOME\Documents\All-Values.txt"
+$script:pathfinalcountnoduplicates = "$HOME\Documents\NoDuplicates-Values.txt"
+$script:pathsqlfinalcontent = "$HOME\Documents\SQL-Formated.txt"
 Show-Menu -Title "Find-X/Do-X By Daniel Vazome For Detego" -Question "What would you like to accomplish?"
-Write-Host 'Done! Here is you performance index:' -ForegroundColor DarkGreen -BackgroundColor White
-$stopwatch
-#End
+Write-Host 'Done! Here is you performance statistics:' -ForegroundColor DarkGreen -BackgroundColor White
+} | Select-Object @{n = "Elapsed"; e = { $_.Minutes, "Minutes", $_.Seconds, "Seconds" -join " " } }
