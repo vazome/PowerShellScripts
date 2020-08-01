@@ -13,7 +13,7 @@ Silent install option
 Add additional file extensions to work with
 
 ### [PC Setup](/UpToDate/ChangeTimeNameCulture.ps1)
-Automatically setups PC for you
+Automatically setups PC for you</br>
 This is a long-runner project (It will grow as I learn), so there is no defined release date
 Milestones:
 - Choose between countries
