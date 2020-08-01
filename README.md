@@ -13,13 +13,13 @@ Silent install option
 Add additional file extensions to work with
 
 ### [PC Setup](/UpToDate/ChangeTimeNameCulture.ps1)
-Automatically setups PC for you. 
+Automatically setups PC for you
 This is a long-runner project (It will grow as I learn), so there is no defined release date
-Milestones
-Choose between countries
-Select your language and culture settings
-Add popular Windows 10 tweaks
-Select applications to download and install
-... and so on
+Milestones:
+- Choose between countries
+- Select your language and culture settings
+- Add popular Windows 10 tweaks
+- Select applications to download and install
+- ... and so on
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
