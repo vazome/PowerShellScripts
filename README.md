@@ -1,7 +1,7 @@
 # PowerShellScripts
 This is the main repository for my PowerShell works. I need time to adapt and commit all my curren scripts to GitHub.
 ## Search tools
-### [FindConvertExportLog](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
+### [LogToolkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
 With this you can easily find values, compare, format to sql what you want from JSON like or Text, Log file
 ## Deployment purpose scripts
 ### [Deploy multiple EXEs and MSIs packages](/UpToDate/DeployExeAndMsi.ps1)
