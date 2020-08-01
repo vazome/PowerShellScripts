@@ -5,6 +5,65 @@ using namespace System.Management.Automation.Host
 Add-Type -AssemblyName System.Windows.Forms
 $script:append = New-Object System.Text.StringBuilder
 $script:error700 = 'ERROR 700: The answear is out of borders'
+$script:error100 = 'ERROR 500: No file selected'
+#Special thanks to Boe Prox (proxb) for notification system
+Function Invoke-BalloonTip {
+    [CmdletBinding()]
+    Param (
+        [Parameter(Mandatory = $True, HelpMessage = "The message text to display. Keep it short and simple.")]
+        [string]$Message,
+  
+        [Parameter(HelpMessage = "The message title")]
+        [string]$Title = "Attention $env:username",
+  
+        [Parameter(HelpMessage = "The message type: Info,Error,Warning,None")]
+        [System.Windows.Forms.ToolTipIcon]$MessageType,
+     
+        [Parameter(HelpMessage = "The path to a file to use its icon in the system tray")]
+        [string]$SysTrayIconPath = 'C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe',     
+  
+        [Parameter(HelpMessage = "The number of milliseconds to display the message.")]
+        [int]$Duration = 2000
+    )
+  
+    Add-Type -AssemblyName System.Windows.Forms
+  
+    If (-NOT $global:balloon) {
+        $global:balloon = New-Object System.Windows.Forms.NotifyIcon
+  
+        #Mouse double click on icon to dispose
+        [void](Register-ObjectEvent -InputObject $balloon -EventName MouseDoubleClick -SourceIdentifier IconClicked -Action {
+                #Perform cleanup actions on balloon tip
+                Write-Verbose 'Disposing of balloon'
+                $global:balloon.dispose()
+                Unregister-Event -SourceIdentifier IconClicked
+                Remove-Job -Name IconClicked
+                Remove-Variable -Name balloon -Scope Global
+            })
+    }
+  
+    #Need an icon for the tray
+    $path = Get-Process -id $pid | Select-Object -ExpandProperty Path
+  
+    #Extract the icon from the file
+    $balloon.Icon = [System.Drawing.Icon]::ExtractAssociatedIcon($SysTrayIconPath)
+  
+    #Can only use certain TipIcons: [System.Windows.Forms.ToolTipIcon] | Get-Member -Static -Type Property
+    $balloon.BalloonTipIcon = [System.Windows.Forms.ToolTipIcon]$MessageType
+    $balloon.BalloonTipText = $Message
+    $balloon.BalloonTipTitle = $Title
+    $balloon.Visible = $true
+  
+    #Display the tip and specify in milliseconds on how long balloon will stay visible
+    $balloon.ShowBalloonTip($Duration)
+  
+    Write-Verbose "Ending function"
+  
+}
+#GitHub
+$balloonping = Invoke-BalloonTip -Title 'Step Done' -Message 'Another steps available' -MessageType 'Info'
+$balloonerror = Invoke-BalloonTip -Title 'Step Error' -Message 'An error occured' -MessageType 'Error'
+$balloonwarnguide = Invoke-BalloonTip -Title 'Step Warning' -Message 'Logic missmatch' -MessageType 'Warning'
 function Show-Dialog {
     $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog
     $FileBrowser.InitialDirectory = [System.IO.Directory]::GetCurrentDirectory() # Get current directory where UI selection window will present
@@ -18,7 +77,8 @@ function Show-Dialog {
 
     }
     else {
-        Write-Warning "No file proveded" -ErrorAction Stop
+        Write-Error -Message $error100
+        $balloonerror
     }
 }
 function Select-MultipleFiles {
@@ -47,6 +107,7 @@ function Save-To {
     }
     else {
         Write-Host "File Save Dialog Cancelled!" -ForegroundColor Yellow
+        $balloonerror
         exit
     } 
 }
@@ -64,27 +125,26 @@ function Get-Values {
     Write-Host "Please specify file(s) location" -ForegroundColor Black -BackgroundColor DarkYellow
     Show-Dialog
     $SpecifyRecord = (Read-Host -Prompt 'What record are you looking for (if multiple separate them by comma)').split(',') | ForEach-Object { $_.trim() }
-    $Delimiter_1 = Read-Host -Prompt 'Please provide structural delimiter (Default comma ",")'
+    $Delimiter_1 = Read-Host -Prompt 'Please provide structural delimiter (Press [Enter] for comma ",")'
     if ([string]::IsNullOrWhiteSpace($Delimiter_1))
     { $Delimiter_1 = ',' }
-    $Delimiter_2 = Read-Host -Prompt 'And second structural delimiter (Default colon ":")'
+    $Delimiter_2 = Read-Host -Prompt 'And second structural delimiter (Press [Enter] for colon ":")'
     if ([string]::IsNullOrWhiteSpace($Delimiter_2))
     { $Delimiter_2 = ':' }
     Start-Sleep -Seconds 1
     #We have to obtain file(s) content, just in case remove "", delimit the content and select by pattern
     $script:temp1i = New-TemporaryFile
     $temp1i.FullName
-    Write-Verbose 'Creating the scope'-Verbose
+    Write-Verbose 'IN PROGRESS'-Verbose
     $delimatch = foreach ($s in $tocount) {
         $s -split $Delimiter_1 -match $SpecifyRecord -split $Delimiter_2 -notmatch $SpecifyRecord -replace '[^A-Za-z0-9-]'
     }
-    Write-Verbose 'Delimiting and matching' -Verbose
     $yesorno = Read-Host -Prompt "Remove duplicates and create an additional file (y/n)?"
     if ($yesorno -like 'y*') {
         $script:temp1o = New-TemporaryFile
         $temp1o.FullName
         Set-Content $temp1i.FullName -Value ($delimatch)
-        Write-Host 'Step 2.1: Removing duplicates (unifying)'
+        Write-Host 'REMOVING DUPLICATES'
         #Removing duplicates
         $stream = [System.IO.StreamWriter] $temp1o.FullName
         $UniqueItems = [system.collections.generic.list[string]]([System.Collections.Generic.HashSet[string]]([System.IO.File]::ReadLines($temp1i.FullName)))
@@ -94,6 +154,7 @@ function Get-Values {
         <#$script:Lines = [System.Collections.Generic.HashSet[string]]::new()
         $Lines.UnionWith([string[]][System.IO.File]::ReadLines($temp1i.FullName))
         [System.IO.File]::WriteAllLines($temp1o.FullName, $Lines)#>
+        $balloonping
         $script:sqlyesorno = Read-Host -Prompt "Would you like convert this to SQL query format (y/n)?"
         if ($sqlyesorno -like 'y*') {
             $script:getforsql = [System.IO.File]::ReadLines($temp1o.FullName)
@@ -105,9 +166,11 @@ function Get-Values {
         }
         else {
             Write-Error -Message $error700 -Category SyntaxError
+            $balloonwarnguide
             Start-Sleep 2
             $script:Lines = [System.IO.File]::ReadAllLines($temp1o.FullName)
             Save-To $Lines
+            
         }
         Remove-Item $temp1i, $temp1o
     }
@@ -118,17 +181,19 @@ function Get-Values {
         exit
     }
     else {
-        Write-Error -Message $error700 
+        Write-Error -Message $error700
+        $balloonwarnguide
         Remove-Item $temp1i
         exit
     }
 }
-<# 
+<# AN ANOTHER WAY TO ADD A BRACKET
 function AddTheContent {
     param ( 
         [String]$pathsqlfinalcontent)
     process {
-        $( , $_; Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent -Encoding UTF8
+        $( , $_
+        Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent -Encoding UTF8
     }
 }
 #>
@@ -226,7 +291,6 @@ Measure-Command -Expression {
     Show-Menu -Title "LogToolkit By Daniel Vazome" -Question "What would you like to accomplish?"
     Write-Host 'Done! Here is your statistics:' -ForegroundColor DarkGreen -BackgroundColor White
 } | Select-Object @{n = "Elapsed"; e = { $_.Minutes, "Minutes", $_.Seconds, "Seconds" -join " " } }
-#Justing the signature
 # SIG # Begin signature block
 # MIIQQgYJKoZIhvcNAQcCoIIQMzCCEC8CAQExCzAJBgUrDgMCGgUAMGkGCisGAQQB
 # gjcCAQSgWzBZMDQGCisGAQQBgjcCAR4wJgIDAQAABBAfzDtgWUsITrck0sYpfvNR
