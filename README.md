@@ -5,12 +5,11 @@ This is the main repository for my PowerShell works. I need time to adapt and co
 With this you can easily find values, compare, format to sql what you want from JSON like or Text, Log file
 ## Deployment purpose scripts
 ### [Deploy multiple EXEs and MSIs packages](/UpToDate/DeployExeAndMsi.ps1)
-The script automatically lauches installers in a specified folder
-
+The script automatically lauches installers in a specified folder<br/>
 Milestones:
-Specify own folder
-Silent install option
-Add additional file extensions to work with
+- Specify own folder
+- Silent install option
+- Add additional file extensions to work with
 
 ### [PC Setup](/UpToDate/ChangeTimeNameCulture.ps1)
 Automatically setups PC for you</br>
