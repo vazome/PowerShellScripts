@@ -4,7 +4,7 @@
 using namespace System.Management.Automation.Host
 Add-Type -AssemblyName System.Windows.Forms
 $script:append = New-Object System.Text.StringBuilder
-$script:error700 = 'ERROR 700: The aswear is out of borders'
+$script:error700 = 'ERROR 700: The answear is out of borders'
 function Show-Dialog {
     $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog
     $FileBrowser.InitialDirectory = [System.IO.Directory]::GetCurrentDirectory() # Get current directory where UI selection window will present
