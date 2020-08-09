@@ -1,9 +1,17 @@
-#Daniel Vazome 2020
-#Declaring fucntion to add round bracket
-#^(?=.*\b08334451\b)(?=.*\bOmni\b).*$ - Find a string with these 2 keywords
-Add-Type -AssemblyName System.Windows.Forms
-$script:append = New-Object System.Text.StringBuilder
-$script:error700 = 'ERROR 700: The answear is out of borders'
+#Copyright (c) 2020 Daniel Vazome
+#MIT Lincence 
+#IMPORTANT
+<#
+This tool was created to simplify the overal workflow and daily life of me and my coworkers
+Unfortunately the abilities of this tool are limited by some servers that DO NOT have up to date verion of PowerShell (Stable 5.1 or CrossPlatform .NET Core 7.0.3)
+This will resolve after initial upgrade to at least Windows Server 2016
+Because of that script was made in more universal way and somewhere has archaic fashioned code
+#>
+#IMPORTANT END
+
+Add-Type -AssemblyName System.Windows.Forms #Adding .NET namespace of WinForms to have ability to save with GUI
+$script:append = New-Object System.Text.StringBuilder #Adding .NET namespace to have another ways to read/write
+$script:error700 = 'ERROR 700: The answer is out of borders'
 $script:error100 = 'ERROR 500: No file selected'
 #Special thanks to Boe Prox (proxb) for notification system
 Function Invoke-BalloonTip {
@@ -56,12 +64,13 @@ Function Invoke-BalloonTip {
   
     Write-Verbose "Ending function"
   
-}#GitHub
-
+}
+#NOTIFICATION REMIDERS
 #Invoke-BalloonTip -Message 'An error occured' -Title 'Error' -MessageType 'Error'
 #Invoke-BalloonTip -Message 'Out of logic' -Title 'Warning' -MessageType 'Warning'
 #Invoke-BalloonTip -Message 'Step Done' -Title 'Information' -MessageType 'Info'
-function Show-Dialog {
+function Select-OneFile {
+    #GUI SELECT ONE FILE
     $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog
     $FileBrowser.InitialDirectory = [System.IO.Directory]::GetCurrentDirectory() # Get current directory where UI selection window will present
     $FileBrowser.Filter = 'All files (*.*)| *.*' #Specify multiple 
@@ -69,26 +78,28 @@ function Show-Dialog {
     $importresult = $FileBrowser.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true }))
     $importresult # Lauching variable to get output at work
     if ($importresult -eq "OK") {      
-        $script:tocount = [System.IO.File]::ReadLines($FileBrowser.FileName)
-        $script:topatchdialog = $FileBrowser.FileName
+        $script:tocount = [System.IO.File]::ReadAllLines($FileBrowser.FileName)
+        $script:onefilelocation = $FileBrowser.FileName
 
     }
     else {
         Write-Error -Message $error100
-        Invoke-BalloonTip -Message 'An error occured' -Title 'Error' -MessageType 'Error'
+        Invoke-BalloonTip -Message 'File selection error occured' -Title 'Error' -MessageType 'Error'
     }
 }
 function Select-MultipleFiles {
+    #GUI SELECT MULTIPLE FILES
     $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ #a way to specify methods by a hash table
         Multiselect      = $true # Multiple files can be chosen
         Filter           = 'All files (*.*)| *.*' # Specified file types
         Title            = 'Select files to process'
-        InitialDirectory = [System.IO.Directory]::GetCurrentDirectory()
+        InitialDirectory = [System.IO.Directory]::GetCurrentDirectory() #Gets current directory
     }
     [void]$FileBrowser.ShowDialog((New-Object System.Windows.Forms.Form -Property @{TopMost = $true }))
-    $script:Path = $FileBrowser.FileNames
+    $script:PathMultipleFiles = $FileBrowser.FileNames
 }
 function Save-To {
+    #GUI File Saving
     [CmdletBinding()]
     param (
         [Parameter(Mandatory)]
@@ -103,127 +114,128 @@ function Save-To {
         Set-Content $Dialog.FileName -Value ($ExpresionFunction)
     }
     else {
-        Write-Host "File Save Dialog Cancelled!" -ForegroundColor Yellow
-        Invoke-BalloonTip -Message 'An error occured' -Title 'Error' -MessageType 'Error'
+        Write-Error -Message $error100
+        Invoke-BalloonTip -Message 'File selection error occured' -Title 'Error' -MessageType 'Error'
         exit
     } 
 }
 function Find-InHuge {
-    param (
-        [Parameter(Mandatory)]
-        $Patt
-    )
-    Select-MultipleFiles
-    $script:ExpresionFunction = Select-String -Pattern $Patt -Path $Path
+    #No parameters specified to allow multiple patterns by comma
+    $script:PatternFirst = (Read-Host -Prompt 'Provide first scope (e.g. method) or just press [ENTER]').Split(',') | ForEach-Object { $_.trim() }
+    $script:PatternLast = (Read-Host -Prompt 'You can split patterns by comma').Split(',') | ForEach-Object { $_.trim() }
+    if (-not [string]::IsNullOrWhiteSpace($PatternFirst)) {
+        $script:tempfindinhuge = [IO.Path]::GetTempFileName()
+        $tempfindinhuge
+        $patternfirstsearch = Select-String -Pattern $PatternFirst -Path $PathMultipleFiles
+        Set-Content $tempfindinhuge -value ($patternfirstsearch)
+        $script:hugelogsearchfinal = Select-String -Pattern $PatternLast -Path $tempfindinhuge | Select-Object -ExpandProperty Line
+        Invoke-BalloonTip -Message 'Scope + Pattern: Done' -Title 'Information' -MessageType 'Info'
+    }
+    elseif ([string]::IsNullOrWhiteSpace($PatternFirst)) {
+        $script:hugelogsearchfinal = Select-String -Pattern $PatternLast -Path $PathMultipleFiles
+        Invoke-BalloonTip -Message 'Pattern: Done' -Title 'Information' -MessageType 'Info'
+    } 
+    else {
+        Invoke-BalloonTip -Message 'Step Done' -Title 'Information' -MessageType 'Info'
+    }
+    
 }
 
 function Get-Values {
-    #Let's ask for current search scope
-    Write-Host "Please specify file(s) location" -ForegroundColor Black -BackgroundColor DarkYellow
-    Show-Dialog
-    $SpecifyRecord = (Read-Host -Prompt 'What record are you looking for (if multiple separate them by comma)').split(',') | ForEach-Object { $_.trim() }
-    $Delimiter_1 = Read-Host -Prompt 'Please provide structural delimiter (Press [Enter] for comma ",")'
-    if ([string]::IsNullOrWhiteSpace($Delimiter_1))
-    { $Delimiter_1 = ',' }
-    $Delimiter_2 = Read-Host -Prompt 'And second structural delimiter (Press [Enter] for colon ":")'
-    if ([string]::IsNullOrWhiteSpace($Delimiter_2))
-    { $Delimiter_2 = ':' }
-    Start-Sleep -Seconds 1
-    #We have to obtain file(s) content, just in case remove "", delimit the content and select by pattern
-    $script:temp1i = New-TemporaryFile
-    $temp1i.FullName
-    Write-Verbose 'IN PROGRESS'-Verbose
-    $delimatch = foreach ($s in $tocount) {
-        $s -split $Delimiter_1 -match $SpecifyRecord -split $Delimiter_2 -notmatch $SpecifyRecord -replace '[^A-Za-z0-9-]'
-    }
+    $options = [Text.RegularExpressions.RegexOptions]::IgnoreCase -bor [Text.RegularExpressions.RegexOptions]::CultureInvariant #We don't care about searched word's case and ignoring culture
+    $searchformethod = (Read-Host -Prompt 'Provide first scope (e.g. method) or just press [ENTER]').Split(',') | ForEach-Object { $_.trim() }
+    $searchforvalue = Read-Host -Prompt 'Specify a value type you are looking for'
     $yesorno = Read-Host -Prompt "Remove duplicates and create an additional file (y/n)?"
+    #https://regexr.com/59s8q - The visualization of this regex
+    $regex = '(?<="' + [regex]::Escape($searchforvalue) + '":"|"' + [regex]::Escape($searchforvalue) + '\\":\\")[^\\"]+' #WE DO REGEX SEARCH
+    if (-not [string]::IsNullOrWhiteSpace($searchformethod)) {
+        $script:temp1nomethod = [IO.Path]::GetTempFileName()
+        $temp1nomethod
+        Set-Content -Path $temp1nomethod -Value (Select-String -Pattern $searchformethod -Path $onefilelocation)
+        $tocount = [System.IO.File]::ReadAllLines($temp1nomethod)
+        $script:regexsearch = [regex]::Matches($tocount, $regex, $options) #Pointing to: text extraction variable, regex formula, search option
+    }
+    elseif ([string]::IsNullOrWhiteSpace($searchformethod)) {
+        $script:regexsearch = [regex]::Matches($tocount, $regex, $options) #Pointing to: text extraction variable, regex formula, search option
+    }
+    else {
+        $error100
+        Invoke-BalloonTip -Message 'An error occured' -Title 'Error' -MessageType 'Error'
+    }
+    #Start-Sleep -Seconds 1 #A pause to give our brain keep up with the cold-blooded machine
+    Write-Verbose 'IN PROGRESS'-Verbose
     if ($yesorno -like 'y*') {
-        $script:temp1o = New-TemporaryFile
-        $temp1o.FullName
-        Set-Content $temp1i.FullName -Value ($delimatch)
+        $script:temp1o = [IO.Path]::GetTempFileName()
+        $temp1o
+        Save-To $regexsearch.value
+        if (-not [string]::IsNullOrWhiteSpace($searchformethod)) {
+            Remove-Item $temp1nomethod
+        }
         Write-Host 'REMOVING DUPLICATES'
-        #Removing duplicates
-        $stream = [System.IO.StreamWriter] $temp1o.FullName
-        $UniqueItems = [system.collections.generic.list[string]]([System.Collections.Generic.HashSet[string]]([System.IO.File]::ReadLines($temp1i.FullName)))
-        $UniqueItems.sort()
-        $UniqueItems | ForEach-Object { $Stream.writeline($_) }
-        $Stream.close()
-        <#$script:Lines = [System.Collections.Generic.HashSet[string]]::new()
-        $Lines.UnionWith([string[]][System.IO.File]::ReadLines($temp1i.FullName))
-        [System.IO.File]::WriteAllLines($temp1o.FullName, $Lines)#>
+        $sortedunique = $regexsearch.value | Sort-Object | Get-Unique #Removing duplicates
+        Set-Content -Path $temp1o -Value ($sortedunique)
         Invoke-BalloonTip -Message 'Step Done' -Title 'Information' -MessageType 'Info'
         $script:sqlyesorno = Read-Host -Prompt "Would you like convert this to SQL query format (y/n)?"
         if ($sqlyesorno -like 'y*') {
-            $script:getforsql = [System.IO.File]::ReadLines($temp1o.FullName)
+            $script:getforsql = [System.IO.File]::ReadAllLines($temp1o)
             Convert-SQL
         }
         elseif ($sqlyesorno -like 'n*') {
-            $script:Lines = [System.IO.File]::ReadAllLines($temp1o.FullName)
+            $script:Lines = [System.IO.File]::ReadAllLines($temp1o)
             Save-To $Lines
+            Remove-Item $temp1o -Force
         }
         else {
             Write-Error -Message $error700 -Category SyntaxError
             Invoke-BalloonTip -Message 'Out of logic' -Title 'Warning' -MessageType 'Warning'
             Start-Sleep 2
-            $script:Lines = [System.IO.File]::ReadAllLines($temp1o.FullName)
+            $script:Lines = [System.IO.File]::ReadAllLines($temp1o)
             Save-To $Lines
-            
+            Remove-Item $temp1o -Force
         }
-        Remove-Item $temp1i, $temp1o
     }
     elseif ($yesorno -like 'n*') {
         Write-Verbose 'Provided with "No"' -Verbose
-        Save-To $delimatch
-        Remove-Item $temp1i
+        Save-To $regexsearch.value
         exit
     }
+
     else {
         Write-Error -Message $error700
         Invoke-BalloonTip -Message 'Out of logic' -Title 'Warning' -MessageType 'Warning'
-        Remove-Item $temp1i
         exit
     }
 }
-<# AN ANOTHER WAY TO ADD A BRACKET
-function AddTheContent {
-    param ( 
-        [String]$pathsqlfinalcontent)
-    process {
-        $( , $_
-        Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent -Encoding UTF8
-    }
-}
-#>
 function Convert-SQL {
     foreach ($i in $getforsql) {
         $null = $append.AppendLine("'$i',")
     }
-    $script:temp2i = New-TemporaryFile
-    $temp2i.FullName
-    $script:temp2o = New-TemporaryFile
-    $temp2o.FullName
+    $script:temp2i = [IO.Path]::GetTempFileName()
+    $temp2i
+    $script:temp2o = [IO.Path]::GetTempFileName()
+    $temp2o
     $outputstring = $append.ToString()
-    Set-Content $temp2i.FullName -Value ($outputstring) -Encoding UTF8
+    Set-Content $temp2i -Value ($outputstring) -Encoding UTF8
     Write-Verbose 'Trimming step' -Verbose
-    $removelast = Get-Content $temp2i.FullName
+    $removelast = Get-Content $temp2i
     for ($i = $removelast.count; $i -ge 0; $i--) {
         if ($removelast[$i] -match ",") { $removelast[$i] = $removelast[$i] -replace ","; break }
     }
-    Set-Content $temp2o.FullName -Value ($removelast) -Encoding UTF8
+    Set-Content $temp2o -Value ($removelast) -Encoding UTF8
     Write-Verbose 'Brackets step' -Verbose
     #An another way to add "("
-    #"(" | AddTheContent  $temp2o.FullName
-    $plusbracket = "(" + (Get-Content $temp2o.FullName -Raw)
-    $plusbracket.Split('', [System.StringSplitOptions]::RemoveEmptyEntries) | Set-Content  $temp2o.FullName -Encoding UTF8
-    Add-Content $temp2o.FullName -Value ")" 
-    $readbracket = [System.IO.File]::ReadAllLines($temp2o.FullName)
+    #"(" | AddTheContent  $temp2o
+    $plusbracket = "(" + (Get-Content $temp2o -Raw)
+    $plusbracket.Split('', [System.StringSplitOptions]::RemoveEmptyEntries) | Set-Content  $temp2o -Encoding UTF8
+    Add-Content $temp2o -Value ")" 
+    $readbracket = [System.IO.File]::ReadAllLines($temp2o)
     Save-To $readbracket
     Remove-Item $temp2i, $temp2o
 }
 
 function Compare-Files {
-    $script:temp3 = New-TemporaryFile
-    $temp3.FullName
+    $script:temp3 = [IO.Path]::GetTempFileName()
+    $temp3
     $Refr = $Refr -replace '^"(.*)"$', '$1'
     $Difr = $Difr -replace '^"(.*)"$', '$1'
     $Propr = $Propr -replace '^"(.*)"$', '$1'
@@ -231,8 +243,8 @@ function Compare-Files {
         ForEach-Object {
             $_.SideIndicator = $_.SideIndicator -replace '=>', 'Only in Difference file' -replace '<=', 'Only in Reference file'
             $_
-        }) > $temp3.FullName
-    $script:compared = [System.IO.File]::ReadAllLines($temp3.FullName)
+        }) > $temp3
+    $script:compared = [System.IO.File]::ReadAllLines($temp3)
 }
 function Show-Menu {
     [CmdletBinding()]
@@ -249,30 +261,29 @@ function Show-Menu {
     $getvalues_choice = [System.Management.Automation.Host.ChoiceDescription]::new('&Get values and X..', "Find values and do some processing, you will be asked for:`nGive a search scope,`nTo choose to remove duplicates or not,`nConvert to SQL`n")
     $convert_choice = [System.Management.Automation.Host.ChoiceDescription]::new('&Convert my list of values to SQL', "If you already have a clear list of values you can convert it to SQL`nIn the end you will have your origianl file and the one that been processed`n")
     $differentiate_choice = [System.Management.Automation.Host.ChoiceDescription]::new('&Differentiate side by side two files', "Compares side by side and shows the diffrence in values`nFor numeric values .csv is recomended`n")
-
     $options = [System.Management.Automation.Host.ChoiceDescription[]]($scanfilesandhuge_choice, $getvalues_choice, $convert_choice, $differentiate_choice)
 
     $result = $host.ui.PromptForChoice($Title, $Question, $options, 0)
 
     switch ($result) {
         0 {
-            $script:SpecifyForBig = (Read-Host -Prompt "You can split searches by comma").Split(',') | ForEach-Object { $_.trim() }
-            Find-InHuge -Patt $SpecifyForBig
-            Invoke-BalloonTip -Message 'Step Done' -Title 'Information' -MessageType 'Info'
-            Save-To $ExpresionFunction
+            Select-MultipleFiles
+            Find-InHuge -PatternFirst $SpecifyFirstPattern -PatternLast $SpecifyLastPattern
+            Save-To -ExpresionFunction $hugelogsearchfinal
         }
         1 {
+            Select-OneFile
             Get-Values
         }
         2 {
-            Show-Dialog
-            $script:getforsql = [System.IO.File]::ReadLines($topatchdialog)
+            Select-OneFile
+            $script:getforsql = [System.IO.File]::ReadAllLines($onefilelocation)
             Convert-SQL
         }
         3 {
             #MULTICHOICE TO DO
             Write-Warning -Message "Only .CSVs with headers are currently supported for this operation"
-            Show-Dialog
+            Select-OneFile
             $Refr = Read-Host -Prompt "Reference file"
             $Difr = Read-Host -Prompt "Difference file"
             $Propr = Read-Host -Prompt "Specify header name to compare like Id, SKU, GTIN..."
@@ -287,6 +298,27 @@ Measure-Command -Expression {
     $script:pathfinalcountwhole = "$HOME\Documents\All-Values.txt"
     $script:pathfinalcountnoduplicates = "$HOME\Documents\NoDuplicates-Values.txt"
     $script:pathsqlfinalcontent = "$HOME\Documents\SQL-Formated.txt"
-    Show-Menu -Title "LogToolkit 0.9" -Question "What would you like to accomplish?"
+    Show-Menu -Title "LogToolkit 1.0" -Question "What would you like to accomplish?"
     Write-Host 'Done! Here is your statistics:' -ForegroundColor DarkGreen -BackgroundColor White
 } | Select-Object @{n = "Elapsed"; e = { $_.Minutes, "Minutes", $_.Seconds, "Seconds" -join " " } }
+
+#SOME GOOD NOTES
+#(?<="sku":"|"sku\\":\\")[^\\"]+ - Find SKU or gtin or whatever with quick regex 
+#^(?i)(?=.*\bFINDTHIS132312\b)(?=.*\bGET-22THA3T23\b).*$ - Find a string with these 2 keywords
+
+<# AN ANOTHER WAY TO ADD A BRACKET
+function AddTheContent {
+    param ( 
+        [String]$pathsqlfinalcontent)
+    process {
+        $( , $_
+        Get-Content $pathsqlfinalcontent -Raw -ea SilentlyContinue) | Set-Content $pathsqlfinalcontent -Encoding UTF8
+    }
+}
+#>
+
+<# REMOVING DUPLICATES BY HASHSET AND UNION
+$script:Lines = [System.Collections.Generic.HashSet[string]]::new()
+$Lines.UnionWith([string[]][System.IO.File]::ReadAllLines($temp1i))
+[System.IO.File]::WriteAllLines($temp1o, $Lines)
+#>
