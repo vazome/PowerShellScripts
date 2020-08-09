@@ -6,14 +6,14 @@ THE MOST CURRENT PROJECT</br>
 With this you can easily find values, compare, format to sql what you want from JSON like or Text, Log file</br>
 Works with huge files too!
 ## Deployment purpose scripts
-### [Deploy multiple EXEs and MSIs packages](/UpToDate/DeployExeAndMsi.ps1)
+### [Deploy multiple EXEs and MSIs packages (POSTPONED)](/UpToDate/DeployExeAndMsi.ps1)
 The script automatically launches installers in a specified folder</br>
 Milestones:
 - Specify own folder
 - Silent install option
 - Add additional file extensions to work with
 
-### [PC Setup](/UpToDate/ChangeTimeNameCulture.ps1)
+### [PC Setup (POSTPONED)](/UpToDate/ChangeTimeNameCulture.ps1)
 Automatically setups PC for you</br>
 This is a long-runner project (It will grow as I learn), so there is no defined release date
 Milestones:
