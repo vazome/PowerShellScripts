@@ -9,7 +9,7 @@ The tool has features such as:
 - Get values and X - get’s values and does something them
 - Convert to SQL - converts set of values to SQL format
 - Differentiation -  compares 2 files (For today compares only .CSVs)
-### [Deploy multiple EXEs and MSIs packages (POSTPONED)]
-### [PC Setup (POSTPONED)]
+### Deploy multiple EXEs and MSIs packages (POSTPONED)
+### PC Setup (POSTPONED)
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
