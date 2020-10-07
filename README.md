@@ -26,6 +26,22 @@ Get values and X tool mainly uses formula like this (?<="yourvalue":"|"yourvalue
 - Scale-ability - We can change the formula in order to adapt to changes. 
 - Ease of control - This is not a fancy multiline code but a short and logical formula that a person can get acquainted with. Tweak it and not ruin anything at all. 
 
+#### .NET, Windows and PowerShell or why some features might not work on Windows 8.1/Server 2012 and before
+
+With every new version of Windows Microsoft updates .NET and CLIs. They stopped doing things this way since Windows 10. It features the embedded, stable, and long-running version - [Windows PowerShell 5.1](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/install/installing-windows-powershell?view=powershell-5.1) but there is the cross-platform, open-sourced, feature-full - [PowerShell 7](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1) that advances every year.
+
+Unfortunately, the abilities of this tool are limited for devices that do not have up to date version of PowerShell (at least stable 5.1).
+#### Let’s put some practice
+##### Search (Windows Server 2012/Windows 8+)
+The “Search” is the default option in the selection menu (this means that you can just press enter). 
+
+Purpose: search in huge logs, relatively quick
+![Menu](/Up%20To%20Date/Images/mainMenu.png)
+
+- You will be asked to specify files for search
+- Then provide the search scope(s) (regex enabled)
+- After, you will be prompted to save it all to a file.
+
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
 ### PC Setup (POSTPONED)
 ## License
