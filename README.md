@@ -44,6 +44,7 @@ Purpose: search in huge logs, relatively quick
 
 ![Multiselection is enabled](/Up%20To%20Date/Images/multiselection.jpg)
 
+##### Get values and X (Windows Server 2016/Windows 10)
 Purpose: extract values from a specific method in a specific log and maybe convert them.
 
 1. You will be asked to specify one file for search
@@ -66,7 +67,6 @@ You just select a file to process and save everything in another.
 |4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
 
-##### Get values and X (Windows Server 2016/Windows 10)
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
 ### PC Setup (POSTPONED)
 ## License
