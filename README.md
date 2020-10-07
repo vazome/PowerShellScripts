@@ -20,6 +20,12 @@ This tool uses regex. There are many advantages of using it and the most importa
 
 Quick example:
 Get values and X tool mainly uses formula like this (?<="yourvalue":"|"yourvalue\\":\\")[^\\"]+ to find needed values. You can actually see how it works! Just click on the [link here](https://regexr.com/59s8q).
+![Example](/Up%20To%20Date/Images/examplesku.png)
+
+- Universal - As you can see it can be used even outside of PowerShell
+- Scale-ability - We can change the formula in order to adapt to changes. 
+- Ease of control - This is not a fancy multiline code but a short and logical formula that a person can get acquainted with. Tweak it and not ruin anything at all. 
+
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
 ### PC Setup (POSTPONED)
 ## License
