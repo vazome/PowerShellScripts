@@ -42,6 +42,36 @@ Purpose: search in huge logs, relatively quick
 - Then provide the search scope(s) (regex enabled)
 - After, you will be prompted to save it all to a file.
 
+![Multiselection is enabled](/Up%20To%20Date/Images/multiselection.jpg)
+
+Purpose: extract values from a specific method in a specific log and maybe convert them.
+
+1. You will be asked to specify one file for search
+2. Provide the first search scope, here you can split patterns by comma (,) or just skip it all (regex enabled)
+3. With the second prompt, you specify a value to extract
+4. In the end, found values can be saved and get unification, and Converted to SQL
+
+![Get Values Image](/Up%20To%20Date/Images/selectiongtin.png)
+
+##### Convert to SQL (Windows Server 2016/Windows 10)
+Purpose: to convert an array of values to an SQL-friendly format.
+
+You just select a file to process and save everything in another.
+
+|BEFORE|AFTER|
+|------------|
+|4060507377377|('4060507377377',|
+|4060507377322|'4060507377322',|
+|4060507378343|'4060507378343',|
+|4060507379425|'4060507379425',|
+|4060507379449|'4060507379449’)|
+
+
+
+
+
+
+##### Get values and X (Windows Server 2016/Windows 10)
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
 ### PC Setup (POSTPONED)
 ## License
