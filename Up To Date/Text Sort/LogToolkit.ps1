@@ -303,7 +303,7 @@ Measure-Command -Expression {
 } | Select-Object @{n = "Elapsed"; e = { $_.Minutes, "Minutes", $_.Seconds, "Seconds" -join " " } }
 
 #SOME GOOD NOTES
-#(?<="sku":"|"sku\\":\\")[^\\"]+ - Find SKU or gtin or whatever with quick regex 
+#(?<="sku":"|"sku\\":\\")[^\\"]+ - Find a record or whatever with quick regex 
 #^(?i)(?=.*\bFINDTHIS132312\b)(?=.*\bGET-22THA3T23\b).*$ - Find a string with these 2 keywords
 
 <# AN ANOTHER WAY TO ADD A BRACKET
