@@ -59,17 +59,12 @@ Purpose: to convert an array of values to an SQL-friendly format.
 You just select a file to process and save everything in another.
 
 |BEFORE|AFTER|
-|------------|
+|:------------:|:-------------------:|
 |4060507377377|('4060507377377',|
 |4060507377322|'4060507377322',|
 |4060507378343|'4060507378343',|
 |4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
-
-
-
-
-
 
 ##### Get values and X (Windows Server 2016/Windows 10)
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
