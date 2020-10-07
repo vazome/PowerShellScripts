@@ -67,6 +67,11 @@ You just select a file to process and save everything in another.
 |4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
 
+##### Differentiation (Windows Server 2016/Windows 10)
+Purpose: comparison of huge text arrays to find similarities and etc.
+
+The tool and documentation are in progress.
+
 ### Deploy multiple EXEs and MSIs packages (POSTPONED)
 ### PC Setup (POSTPONED)
 ## License
