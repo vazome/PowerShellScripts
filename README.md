@@ -1,7 +1,6 @@
 # PowerShellScripts
 This is the main repository for my PowerShell works. I need time to adapt and commit all my curren scripts to GitHub.
-## Search tools
-### [LogToolkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
+## [LogToolkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
 LogToolkit is a tool written in PowerShell to ease the things.
 Current Version: 1.0 (Stable) 
 The main concept is to give a robot handle something that shouldn’t be done by a human and/or where current tools are struggling at something.
@@ -12,7 +11,7 @@ The tool has features such as:
 - 👥 Differentiation -  compares 2 files (For today compares only .CSVs)
 
 All tools in this Toolkit are easy to use. If you encounter any issue or error, please get informed here and contact me if you have not found an answer.
-#### A little bit of theory
+### A little bit of theory
 This tool uses regex. There are many advantages of using it and the most important are:
 - Universality
 - Scale-ability
@@ -26,13 +25,13 @@ Get values and X tool mainly uses formula like this (?<="yourvalue":"|"yourvalue
 - Scale-ability - We can change the formula in order to adapt to changes. 
 - Ease of control - This is not a fancy multiline code but a short and logical formula that a person can get acquainted with. Tweak it and not ruin anything at all. 
 
-#### .NET, Windows and PowerShell or why some features might not work on Windows 8.1/Server 2012 and before
+### .NET, Windows and PowerShell or why some features might not work on Windows 8.1/Server 2012 and before
 
 With every new version of Windows Microsoft updates .NET and CLIs. They stopped doing things this way since Windows 10. It features the embedded, stable, and long-running version - [Windows PowerShell 5.1](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/install/installing-windows-powershell?view=powershell-5.1) but there is the cross-platform, open-sourced, feature-full - [PowerShell 7](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1) that advances every year.
 
 Unfortunately, the abilities of this tool are limited for devices that do not have up to date version of PowerShell (at least stable 5.1).
-#### Let’s put some practice
-##### Search (Windows Server 2012/Windows 8+)
+### Let’s put some practice
+#### Search (Windows Server 2012/Windows 8+)
 The “Search” is the default option in the selection menu (this means that you can just press enter). 
 
 Purpose: search in huge logs, relatively quick
@@ -44,7 +43,7 @@ Purpose: search in huge logs, relatively quick
 
 ![Multiselection is enabled](/Up%20To%20Date/Images/multiselection.jpg)
 
-##### Get values and X (Windows Server 2016/Windows 10)
+#### Get values and X (Windows Server 2016/Windows 10)
 Purpose: extract values from a specific method in a specific log and maybe convert them.
 
 1. You will be asked to specify one file for search
@@ -54,7 +53,7 @@ Purpose: extract values from a specific method in a specific log and maybe conve
 
 ![Get Values Image](/Up%20To%20Date/Images/selectiongtin.png)
 
-##### Convert to SQL (Windows Server 2016/Windows 10)
+#### Convert to SQL (Windows Server 2016/Windows 10)
 Purpose: to convert an array of values to an SQL-friendly format.
 
 You just select a file to process and save everything in another.
