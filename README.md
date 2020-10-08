@@ -18,7 +18,7 @@ This tool uses regex. There are many advantages of using it and the most importa
 - Ease of control
 
 Quick example:
-Get values and X tool mainly uses formula like this (?<="yourvalue":"|"yourvalue\\":\\")[^\\"]+ to find needed values. You can actually see how it works! Just click on the [link here](https://regexr.com/59s8q).
+Get values and X tool mainly uses formula like this `(?<="yourvalue":"|"yourvalue\\":\\")[^\\"]+` to find needed values. You can actually see how it works! Just click on the [link here](https://regexr.com/59s8q).
 ![Example](/Up%20To%20Date/Images/examplesku.png)
 
 - Universal - As you can see it can be used even outside of PowerShell
