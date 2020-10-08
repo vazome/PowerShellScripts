@@ -2,8 +2,10 @@
 This is the main repository for my PowerShell works. I need time to adapt and commit all my curren scripts to GitHub.
 ## [LogToolkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
 LogToolkit is a tool written in PowerShell to ease the things.
+
 Current Version: 1.0 (Stable)
 Windows Notifications 🔔 now online!
+
 The main concept is to give a robot handle something that shouldn’t be done by a human and/or where current tools are struggling at something.
 The tool has features such as:
 - 🔎 Search - common search in huge sized logs
