@@ -4,6 +4,7 @@ This is the main repository for my PowerShell works. I need time to adapt and co
 LogToolkit is a tool written in PowerShell to ease the things.
 
 Current Version: 1.0 (Stable)
+
 Windows Notifications 🔔 now online!
 
 The main concept is to give a robot handle something that shouldn’t be done by a human and/or where current tools are struggling at something.
