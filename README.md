@@ -1,7 +1,7 @@
 # PowerShellScripts
 This is the main repository for my PowerShell works. I need time to adapt and commit all my curren scripts to GitHub.
-## [LogToolkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1)
-LogToolkit is a tool written in PowerShell to ease the things.
+## [Logkit](/Up%20To%20Date/Text%20Sort/LogToolkit.ps1) (POSTPONED) Currently working on a diffirent project
+Logkit is a tool written in PowerShell to ease the things.
 
 Current Version: 1.0 (Stable)
 
