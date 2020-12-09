@@ -3,7 +3,7 @@
 #IMPORTANT
 <#
 This tool was created to simplify the overal workflow and daily life of me and my coworkers
-Unfortunately the abilities of this tool are limited by some servers that DO NOT have up to date verion of PowerShell (Stable 5.1 or CrossPlatform .NET Core 7.0.3)
+Unfortunately the abilities of this tool are limited by some servers (Stable 5.1 or CrossPlatform .NET Core 7.0.3)
 This will resolve after initial upgrade to at least Windows Server 2016
 Because of that script was made in more universal way and somewhere has archaic fashioned code
 #>
