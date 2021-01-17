@@ -1,7 +1,7 @@
 # PowerShellScripts
 This is the main repository for my PowerShell works, most of them are "bleached" aka connection strings or any sensetive information that might be exposed are removed from the script. I need time to adapt and commit all my curren scripts to GitHub.
 ## [InboundCheck](/Up%20To%20Date/InboundCheck%20Ver1.2.ps1) (Final)
-It's a complitaced tool consisting of 600+ string in total to automate things. It is mostly "bleached" and only shows my current scripting level. But there is always a room to advance!
+It's a complitaced tool consisting of 600+ string in total to automate things, includes manipulation with SQL, WCF, .NET and RABBIT MQ (REST API). It is mostly "bleached" and only shows my current scripting level. But there is always a room to advance!
 
 ## [Logkit](/Up%20To%20Date/LogToolkit.ps1) (POSTPONED)
 Logkit is a tool written in PowerShell to ease the things with log checking, it can work with multiple huge logs at once!
