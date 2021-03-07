@@ -2,6 +2,7 @@
 This is the main repository for my PowerShell works, most of them are "bleached" aka connection strings or any sensetive information that might be exposed are removed from the script. I need time to adapt and commit all my curren scripts to GitHub.
 ## [InboundCheck](/Project%20Specific/InboundCheck%20Ver1.2.ps1) (Final)
 Current Version: 1.0 (Stable)
+
 It's a complitaced tool that aimed to safe time and automate workflow, includes manipulation with SQL, WCF, .NET and RABBIT MQ (REST API). It is mostly "bleached" and only shows my scripting level at that time.
 
 ## [Logkit](/Windows/Logkit.ps1) (POSTPONED)
@@ -55,7 +56,6 @@ Purpose: extract values from a specific method in a specific log and maybe conve
 
 #### Convert to SQL
 Purpose: to convert an array of values to an SQL-friendly format.
-
 You just select a file to process and save everything in another.
 
 |BEFORE|AFTER|
