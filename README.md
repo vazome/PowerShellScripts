@@ -3,7 +3,7 @@ This is the main repository for my PowerShell works, most of them are "bleached"
 ## [InboundCheck](/Project%20Specific/InboundCheck%20Ver1.2.ps1) (Final)
 It's a complitaced tool that aimed to safe time and automate workflow, includes manipulation with SQL, WCF, .NET and RABBIT MQ (REST API). It is mostly "bleached" and only shows my current scripting level. But there is always a room to advance!
 
-## [Logkit](/Windows/LogToolkit.ps1) (POSTPONED)
+## [Logkit](/Windows/Logkit.ps1) (POSTPONED)
 Logkit is a tool written in PowerShell to ease the things with log checking, it can work with multiple huge logs at once!
 
 Current Version: 1.0 (Stable)
