@@ -62,8 +62,6 @@ You just select a file to process and save everything in another.
 |:------------:|:-------------------:|
 |4060507377377|('4060507377377',|
 |4060507377322|'4060507377322',|
-|4060507378343|'4060507378343',|
-|4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
 
 #### Differentiation
@@ -72,7 +70,7 @@ The tool and documentation are in progress.
 
 ## [Export Distribution (mailing) Groups with Related Users](Exchange/ExportDistributionGroupsWithRelatedUsers.ps1)
 This is simple. One thing that you need is enough rights to launch below mentioned commands.
-If it fails and gives you errors like "-Filter is not recognized", try to use 
+If it fails and gives you errors like "-Filter is not recognized", try to use:
 ``` 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn.
 ```
