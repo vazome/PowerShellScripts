@@ -7,5 +7,6 @@ Clear-Disk -Number 1 -RemoveData
 #Closing all incomming windows signaling that we have connected our drive and cleaned it
 Stop-Process -Name explorer
 Start-Process explorer -ArgumentList "/n,/select,%SystemDrive%"
+#Start crystal disk to check drive
 Start-Process -FilePath "C:\ProgramData\Microsoft\Windows\Start Menu\Programs\CrystalDiskInfo\CrystalDiskInfo (64bit).lnk"
 get-disk
