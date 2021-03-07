@@ -6,7 +6,9 @@ It's a complitaced tool that aimed to safe time and automate workflow, includes 
 
 ## [Logkit](/Windows/Logkit.ps1) (POSTPONED)
 Logkit is a tool written in PowerShell to ease the things with log checking, it can work with multiple huge logs at once!
+
 Current Version: 1.0 (Stable)
+
 The main concept is to give a robot handle something that shouldn’t be done by a human and/or where current tools are struggling at something.
 The tool has features such as:
 - 🔎 Search - common search in huge sized logs
