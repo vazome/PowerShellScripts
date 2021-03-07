@@ -78,7 +78,7 @@ Purpose: comparison of huge text arrays to find similarities and etc.
 
 The tool and documentation are in progress.
 
-### Deploy multiple EXEs and MSIs packages (POSTPONED)
-### PC Setup (POSTPONED)
+### Export Distribution (mailing) Groups with Related Users
+### 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
