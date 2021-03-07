@@ -78,7 +78,10 @@ Purpose: comparison of huge text arrays to find similarities and etc.
 
 The tool and documentation are in progress.
 
-### Export Distribution (mailing) Groups with Related Users
+## [Export Distribution (mailing) Groups with Related Users](Exchange/ExportDistributionGroupsWithRelatedUsers.ps1)
+This is simple. One thing that you need is enough rights to launch below mentioned commands.
+If it fails and gives you errors like "-Filter is not recognized", please refer to: Exchange.
+The code itself:
 ### 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
