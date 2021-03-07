@@ -74,7 +74,6 @@ If it fails and gives you errors like "-Filter is not recognized", try to use:
 ``` 
 Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn.
 ```
-The code itself:
 ### 
 ## License
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
