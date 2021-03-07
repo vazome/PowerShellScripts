@@ -30,15 +30,9 @@ Get values and X tool mainly uses formula like this `(?<="yourvalue":"|"yourvalu
 
 - Universal - As you can see it can be used even outside of PowerShell
 - Scale-ability - We can change the formula in order to adapt to changes. 
-- Ease of control - This is not a fancy multiline code but a short and logical formula that a person can get acquainted with. Tweak it and not ruin anything at all. 
-
-### .NET, Windows and PowerShell or why some features might not work on Windows 8.1/Server 2012 and before
-
-With every new version of Windows Microsoft updates .NET and CLIs. They stopped doing things this way since Windows 10. It features the embedded, stable, and long-running version - [Windows PowerShell 5.1](https://docs.microsoft.com/en-us/powershell/scripting/windows-powershell/install/installing-windows-powershell?view=powershell-5.1) but there is the cross-platform, open-sourced, feature-full - [PowerShell 7](https://docs.microsoft.com/en-us/powershell/scripting/install/installing-powershell?view=powershell-7.1) that advances every year.
-
-Unfortunately, the abilities of this tool are limited for devices that do not have up to date version of PowerShell (at least stable 5.1).
+- Ease of control - This is not a fancy multiline code but a short and logical formula that a person can get acquainted with. 
 ### Let’s put some practice
-#### Search (Windows Server 2012/Windows 8+)
+#### Search
 The “Search” is the default option in the selection menu (this means that you can just press enter). 
 
 Purpose: search in huge logs, relatively quick
@@ -50,7 +44,7 @@ Purpose: search in huge logs, relatively quick
 
 ![Multiselection is enabled](/Up%20To%20Date/Images/multiselection.jpg)
 
-#### Get values and X (Windows Server 2016/Windows 10)
+#### Get values and X
 Purpose: extract values from a specific method in a specific log and maybe convert them.
 
 1. You will be asked to specify one file for search
@@ -60,7 +54,7 @@ Purpose: extract values from a specific method in a specific log and maybe conve
 
 ![Get Values Image](/Up%20To%20Date/Images/selectiongtin.png)
 
-#### Convert to SQL (Windows Server 2016/Windows 10)
+#### Convert to SQL
 Purpose: to convert an array of values to an SQL-friendly format.
 
 You just select a file to process and save everything in another.
@@ -73,7 +67,7 @@ You just select a file to process and save everything in another.
 |4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
 
-##### Differentiation (Windows Server 2016/Windows 10)
+##### Differentiation
 Purpose: comparison of huge text arrays to find similarities and etc.
 
 The tool and documentation are in progress.
