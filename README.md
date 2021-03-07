@@ -1,15 +1,12 @@
 # PowerShellScripts
 This is the main repository for my PowerShell works, most of them are "bleached" aka connection strings or any sensetive information that might be exposed are removed from the script. I need time to adapt and commit all my curren scripts to GitHub.
 ## [InboundCheck](/Project%20Specific/InboundCheck%20Ver1.2.ps1) (Final)
+Current Version: 1.0 (Stable)
 It's a complitaced tool that aimed to safe time and automate workflow, includes manipulation with SQL, WCF, .NET and RABBIT MQ (REST API). It is mostly "bleached" and only shows my current scripting level. But there is always a room to advance!
 
 ## [Logkit](/Windows/Logkit.ps1) (POSTPONED)
 Logkit is a tool written in PowerShell to ease the things with log checking, it can work with multiple huge logs at once!
-
 Current Version: 1.0 (Stable)
-
-Windows Notifications 🔔 now online!
-
 The main concept is to give a robot handle something that shouldn’t be done by a human and/or where current tools are struggling at something.
 The tool has features such as:
 - 🔎 Search - common search in huge sized logs
@@ -67,9 +64,8 @@ You just select a file to process and save everything in another.
 |4060507379425|'4060507379425',|
 |4060507379449|'4060507379449’)|
 
-##### Differentiation
+#### Differentiation
 Purpose: comparison of huge text arrays to find similarities and etc.
-
 The tool and documentation are in progress.
 
 ## [Export Distribution (mailing) Groups with Related Users](Exchange/ExportDistributionGroupsWithRelatedUsers.ps1)
